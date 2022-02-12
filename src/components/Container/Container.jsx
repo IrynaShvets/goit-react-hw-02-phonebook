@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Wrapper } from './Container.styled';
 
-const Container = ({ children }) => <div className="Container">{children}</div>;
+const Container = ({ children }) => <Wrapper>{children}</Wrapper>;
 
 export default Container;
 

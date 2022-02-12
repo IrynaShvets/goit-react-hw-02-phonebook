@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
+import { Form, Label, Input, InputBottom, Button } from './ContactForm.styled';
 
 class ContactForm extends Component {
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+  };
+
   state = {
     name: '',
     number: '',
@@ -21,6 +26,7 @@ class ContactForm extends Component {
   handleSubmit = e => {
     e.preventDefault();
     this.props.onSubmit(this.state.name, this.state.number);
+
     this.reset();
   };
 
@@ -32,40 +38,36 @@ class ContactForm extends Component {
   };
 
   render() {
+    const { name, number } = this.state;
+
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label htmlFor={this.nameInputId}></label>
-        Name
-        <input
+      <Form onSubmit={this.handleSubmit}>
+        <Label htmlFor={this.nameInputId}>Name</Label>
+        <Input
           type="text"
           name="name"
-          value={this.state.name}
+          value={name}
           htmlFor={this.nameInputId}
           onChange={this.handleChange}
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
         />
-        <label htmlFor={this.numberInputId}></label>
-        Number
-        <input
+        <Label htmlFor={this.numberInputId}>Number</Label>
+        <InputBottom
           type="tel"
           name="number"
-          value={this.state.number}
+          value={number}
           htmlFor={this.numberInputId}
           onChange={this.handleChange}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
         />
-        <button type="submit">Add contact</button>
-      </form>
+        <Button type="submit">Add contact</Button>
+      </Form>
     );
   }
 }
 
 export default ContactForm;
-
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};

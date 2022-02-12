@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid';
-import ContactForm from './components/ContactForm';
-import ContactList from './components/ContactList';
-import Filter from './components/Filter';
-import Container from './components/Container';
+import ContactForm from '../ContactForm';
+import ContactList from '../ContactList';
+import Filter from '../Filter';
+import Container from '../Container';
+import { TitleMain, Title } from './App.styled';
 
 class App extends Component {
   state = {
@@ -16,6 +17,7 @@ class App extends Component {
     filter: '',
   };
 
+  // --- додаю контакти до списку ---
   addContact = (name, number) => {
     const contact = {
       id: nanoid(),
@@ -23,27 +25,33 @@ class App extends Component {
       number,
     };
 
+    const normalizedName = contact.name.toLowerCase();
+    const { contacts } = this.state;
+    const isNameInContacts = contacts.some(contact =>
+      contact.name.toLowerCase().includes(normalizedName),
+    );
+
+    if (isNameInContacts) {
+      return alert(`${name} is already in contacts.`);
+    }
+
     this.setState(({ contacts }) => ({
       contacts: [contact, ...contacts],
     }));
   };
 
+  //--- видаляю контакт зі списку ---
   deleteContact = contactId => {
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     }));
   };
 
-  formSubmitHandler = data => {
-    setTimeout(() => {
-      console.log(data);
-    }, 1000);
-  };
-
   changeFilter = e => {
     this.setState({ filter: e.currentTarget.value });
   };
 
+  // --- пошук по фільтру ---
   getVisibleContacts = () => {
     const { filter, contacts } = this.state;
     const normalizedFilter = filter.toLowerCase();
@@ -59,9 +67,9 @@ class App extends Component {
 
     return (
       <Container>
-        <h1>Phonebook</h1>
+        <TitleMain>Phonebook</TitleMain>
         <ContactForm onSubmit={this.addContact} />
-        <h2>Contacts</h2>
+        <Title>Contacts</Title>
         <Filter value={filter} onChange={this.changeFilter} />
         <ContactList
           contacts={visibleContacts}
